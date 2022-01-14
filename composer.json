@@ -1,10 +1,10 @@
 {
-  "name": "kaadon/helper",
+  "name": "kaadon/khelper",
   "type": "library",
   "description": "kaadon helper for PHP",
 
   "keywords": [
-    "helper",
+    "kaadon helper",
     "kaadon"
   ],
   "homepage": "http://developer.kaadon.com/",
@@ -22,7 +22,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "Kaadon\\Helper\\": "src"
+      "Kaadon\\Khelper\\": "src"
     },
     "files": [
       "helper.php"
