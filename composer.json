@@ -25,7 +25,7 @@
       "Kaadon\\Khelper\\": "src"
     },
     "files": [
-      "helper.php"
+      "src/helper.php"
     ]
   }
 }
