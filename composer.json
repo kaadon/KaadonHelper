@@ -1,0 +1,31 @@
+{
+  "name": "kaadon/helper",
+  "type": "library",
+  "description": "kaadon helper for PHP",
+
+  "keywords": [
+    "helper",
+    "kaadon"
+  ],
+  "homepage": "http://developer.kaadon.com/",
+  "license": "Apache-2.0",
+  "require": {
+    "PHP": ">=7.1",
+    "topthink/framework": "^6.0"
+  },
+  "authors": [
+    {
+      "name": "kaadon",
+      "email": "kaadon@foxmail.com",
+      "homepage": "https://www.kaadon.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Kaadon\\Helper\\": "src"
+    },
+    "files": [
+      "helper.php"
+    ]
+  }
+}

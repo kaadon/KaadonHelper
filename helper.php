@@ -1,60 +1,39 @@
 <?php
 /**
- * 数组 转 对象
- * @param array $arr 数组
- * @return object
+ * Created by : PhpStorm
+ * Web: https://www.kaadon.com
+ * User: ipioo
+ * Date: 2022/1/14 22:11
  */
-function arrayToObject($arr) {
-    if (gettype($arr) != 'array') {
-        return;
-    }
-    foreach ($arr as $k => $v) {
-        if (gettype($v) == 'array' || getType($v) == 'object') {
-            $arr[$k] = (object)arrayToObject($v);
-        }
-    }
 
-    return (object)$arr;
+//PHP stdClass Object转array
+
+if (!function_exists('object_array')) {
+    function object_array($array)
+    {
+        if (is_object($array)) {
+            $array = (array)$array;
+        }
+        if (is_array($array)) {
+            foreach ($array as $key => $value) {
+                $array[$key] = object_array($value);
+            }
+        }
+        return $array;
+    }
 }
 
-/**
- * 对象 转 数组
- * @param object $obj 对象
- * @return array
- */
-function objectToArray($obj) {
-    $obj = (array)$obj;
-    foreach ($obj as $k => $v) {
-        if (gettype($v) == 'resource') {
-            return;
-        }
-        if (gettype($v) == 'object' || gettype($v) == 'array') {
-            $obj[$k] = (array)objectToArray($v);
+
+if (!function_exists('strToUtf8')) {
+    function strToUtf8($str)
+    {
+        $encode = mb_detect_encoding($str, array("ASCII", 'UTF-8', "GB2312", "GBK", 'BIG5'));
+        if ($encode == 'UTF-8') {
+            return $str;
+        } else {
+            return mb_convert_encoding($str, 'UTF-8', $encode);
         }
     }
-
-    return $obj;
 }
 
-/**
- * Returns the type of the var passed.
- *
- * @param mixed $var Variable
- * @return string Type of variable
- * Warning
- *  不要使用 gettype() 来测试某种类型，因为其返回的字符串在未来的版本中可能需要改变。此外，由于包含了字符串的比较，它的运行也是较慢的。
- * 使用 is_* 函数代替。
- */
-function KaadonGetType($var)
-{
-    if (is_array($var)) return "array";
-    if (is_bool($var)) return "boolean";
-    if (is_float($var)) return "float";
-    if (is_int($var)) return "integer";
-    if (is_null($var)) return "NULL";
-    if (is_numeric($var)) return "numeric";
-    if (is_object($var)) return "object";
-    if (is_resource($var)) return "resource";
-    if (is_string($var)) return "string";
-    return "unknown type";
-}
+
