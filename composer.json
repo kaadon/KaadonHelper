@@ -1,22 +1,22 @@
 {
-  "name": "kaadon/khelper",
+  "name": "kaadon/helper",
   "type": "library",
   "description": "kaadon helper for PHP",
-
   "keywords": [
     "kaadon helper",
+    "helper",
     "kaadon"
   ],
   "homepage": "http://developer.kaadon.com/",
   "license": "Apache-2.0",
   "require": {
-    "PHP": ">=7.1",
-    "topthink/framework": "^6.0"
+    "PHP": ">=8.0",
+    "stephenhill/base58": "^1.1"
   },
   "authors": [
     {
       "name": "kaadon",
-      "email": "kaadon@foxmail.com",
+      "email": "kaadon.com@gmail.com",
       "homepage": "https://www.kaadon.com"
     }
   ],
