@@ -7,6 +7,8 @@
  */
 
 //PHP ARRAY 相关
+use Kaadon\Helper\Http;
+
 if (!function_exists('array_rand_value')) {
     /**
      * 数组随机取值
@@ -228,3 +230,21 @@ if (!function_exists("isETHAddress")) {
 }
 
 
+/** http **/
+
+if (!function_exists("http_get")){
+    function http_get($url, $params = array(), $options = array()): bool|string
+    {
+        $http = new Http();        // 实例化对象
+        return $http->get($url, $params );
+    }
+}
+
+if (!function_exists("http_post")){
+    function http_post($url, ?array $params, ?array $headers): bool|string
+    {
+        $http = new Http();        // 实例化对象
+        if (!empty($headers)) $http->setCookiepath($headers);
+        return $http->post($url, $params );
+    }
+}

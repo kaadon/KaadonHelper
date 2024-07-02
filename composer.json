@@ -13,7 +13,8 @@
     "PHP": ">=8.1",
     "ext-bcmath": "*",
     "ext-mbstring": "*",
-    "ext-yaconf": "*"
+    "ext-yaconf": "*",
+    "ext-curl": "*"
   },
   "authors": [
     {
