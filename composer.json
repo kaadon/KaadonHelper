@@ -24,7 +24,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "Kaadon\\Khelper\\": "src"
+      "Kaadon\\Helper\\": "src"
     },
     "files": [
       "helper.php"
