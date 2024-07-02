@@ -1,0 +1,33 @@
+{
+  "name": "kaadon/helper",
+  "type": "library",
+  "description": "kaadon helper for PHP",
+  "keywords": [
+    "kaadon helper",
+    "helper",
+    "kaadon"
+  ],
+  "homepage": "http://developer.kaadon.com/",
+  "license": "Apache-2.0",
+  "require": {
+    "PHP": ">=8.1",
+    "ext-bcmath": "*",
+    "ext-mbstring": "*",
+    "ext-yaconf": "*"
+  },
+  "authors": [
+    {
+      "name": "kaadon",
+      "email": "kaadon.com@gmail.com",
+      "homepage": "https://developer.kaadon.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Kaadon\\Khelper\\": "src"
+    },
+    "files": [
+      "helper.php"
+    ]
+  }
+}
