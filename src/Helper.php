@@ -15,7 +15,7 @@
  *   +----------------------------------------------------------------------
  **/
 
-namespace Kaadon\Khelper;
+namespace Kaadon\Helper;
 
 class Helper
 {
