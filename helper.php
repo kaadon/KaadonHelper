@@ -232,19 +232,135 @@ if (!function_exists("isETHAddress")) {
 
 /** http **/
 
-if (!function_exists("http_get")){
-    function http_get($url, $params = array(), $options = array()): bool|string
+if (!function_exists("sendRequest")) {
+    /**
+     * @param string $method
+     * @param string $url
+     * @param array|null $data
+     * @param int $contentType
+     * @param array $headers
+     * @param int $timeout
+     * @return object
+     */
+    function sendRequest(string $method, string $url, ?array $data, int $contentType = 1 ,array $headers = [], int $timeout = 30): object
     {
-        $http = new Http();        // 实例化对象
-        return $http->get($url, $params );
+        if (in_array($contentType, [1, 2, 3])) {
+            $contentTypeArr = [1 => "multipart/form-data", 2 => "application/json", 3 => "application/x-www-form-urlencoded"];
+            $contentType = $contentTypeArr[$contentType];
+        }
+        // 创建一个 cURL 资源
+        $curl = curl_init($url);
+        // 判断是否为 HTTPS 请求
+        if (stripos($url, "https://") !== false) {
+            // 设置 SSL 选项
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // 不验证证书
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false); // 不验证主机名
+            curl_setopt($curl, CURLOPT_SSLVERSION, 1); // 使用 TLSv1 协议
+        }
+        // 根据请求方法设置 cURL 选项
+        switch ($method) {
+            case 'POST':
+                curl_setopt($curl, CURLOPT_POST, true);
+                break;
+            case 'GET':
+                curl_setopt($curl, CURLOPT_HTTPGET, true);
+                break;
+            case 'PUT':
+                $contentType = 'application/json';
+                curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
+                break;
+            case 'DELETE':
+                $contentType = 'application/json';
+                curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                break;
+        }
+        // 设置 cURL 选项
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
+        // 设置请求头
+        $headers[] = 'Content-Type: ' . $contentType;
+        if (!empty($headers)) {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        }
+        // 根据编码格式设置请求参数
+        if ($data !== null) {
+            if ($contentType == 'application/json') {
+                $postData = json_encode($data);
+            } elseif ($contentType == 'multipart/form-data') {
+                $postData = $data;
+            } else {
+                $postData = http_build_query($data);
+            }
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
+        }
+        // 发送请求并获取响应
+        $response = curl_exec($curl);
+        // 检查是否有错误发生
+        if ($response === false) {
+            $error = curl_error($curl);
+            $result = (object)[
+                'status' => false,
+                'response' => $error,
+            ];
+        } else {
+            $result = (object)[
+                'status' => true,
+                'response' => $response,
+            ];
+            // 处理响应数据
+        }
+        // 关闭 cURL 资源
+        curl_close($curl);
+        // 返回响应数据
+        return $result;
+    }
+}
+if (!function_exists("http_get")) {
+    /**
+     * @param string $url
+     * @param array $params
+     * @return object
+     */
+    function http_get(string $url, array $params = []): object
+    {
+        return sendRequest('GET', $url,$params);
+    }
+}
+if (!function_exists("http_put")) {
+    /**
+     * @param string $url
+     * @param array $params
+     * @return object
+     */
+    function http_put(string $url, array $params = []): object
+    {
+       return sendRequest('PUT', $url,$params);
+    }
+}
+if (!function_exists("http_post")) {
+    /**
+     * @param $url
+     * @param array $data
+     * @param array $headers
+     * @param int $contentType
+     * @return object
+     */
+    function http_post($url, array $data = [], array $headers = [],int $contentType = 1): object
+    {
+        return sendRequest('POST', $url, $data, $contentType, $headers, 60);
+    }
+}
+if (!function_exists("http_delete")) {
+    /**
+     * @param string $url
+     * @param array $params
+     * @return object
+     */
+    function http_delete(string $url, array $params = []): object
+    {
+        return sendRequest('DELETE', $url,$params);
     }
 }
 
-if (!function_exists("http_post")){
-    function http_post($url, ?array $params, ?array $headers): bool|string
-    {
-        $http = new Http();        // 实例化对象
-        if (!empty($headers)) $http->setCookiepath($headers);
-        return $http->post($url, $params );
-    }
-}
+
+

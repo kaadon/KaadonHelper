@@ -230,13 +230,12 @@ class Http
 
     /** Stores the debug messages
      * @var array
+     * @todo will keep debug messages
      * */
     public array $debugMsg;
 
-    /**
-     * Constructor for initializing the class with default values.
-     * @return void
-     * */
+    /**  Constructor for initializing the class with default values.
+     * @return void */
     public function __construct()
     {
         // 先初始化
@@ -511,8 +510,11 @@ class Http
 
     /**
      * 执行一条 http post 请求
+     * @param string $url
+     * @param array $data
+     * @return bool|string
      */
-    public function post($url, $data = array()): bool|string
+    public function post(string $url, array $data = []): bool|string
     {
         return $this->execute($url, '', 'post', $data);
     }
@@ -533,7 +535,7 @@ class Http
     public function save(string $request_file_url, string $save_to_filepath): bool|string
     {
         $fp = fopen($save_to_filepath, 'wb');
-        return $this->execute($request_file_url, '', 'get', [], $extra_params = ['CURLOPT_FILE' => $fp]);
+        return $this->execute($request_file_url, '', 'get', array(), $extra_params = array('CURLOPT_FILE' => $fp));
     }
 
     /**
@@ -882,7 +884,7 @@ class Http
     }
 
     /** 解析 COOKIE */
-    private function _parseCookie(): void
+    private function _parseCookie()
     {
         // Get the cookie header as array
         if (gettype($this->headers['set-cookie']) == "array") {
@@ -919,26 +921,24 @@ class Http
                         break;
                 }
             }
+
             $this->_setCookie($cookieName, $cookieValue, $expires, $path, $domain, $secure);
         }
     }
 
     /** 设置 cookie , 为下一次请求做准备 */
-    private function _setCookie($name, $value, $expires = "", $path = "/", $domain = "", $secure = 0): void
+    private function _setCookie($name, $value, $expires = "", $path = "/", $domain = "", $secure = 0)
     {
         if (strlen($name) == 0) {
-            ($this->_setError("No valid cookie name was specified."));
-            return;
+            return ($this->_setError("No valid cookie name was specified."));
         }
 
         if (strlen($path) == 0 || strcmp($path[0], "/")) {
-            ($this->_setError("$path is not a valid path for setting cookie $name."));
-            return;
+            return ($this->_setError("$path is not a valid path for setting cookie $name."));
         }
 
         if ($domain == "" || !strpos($domain, ".", $domain[0] == "." ? 1 : 0)) {
-            ($this->_setError("$domain is not a valid domain for setting cookie $name."));
-            return;
+            return ($this->_setError("$domain is not a valid domain for setting cookie $name."));
         }
 
         $domain = strtolower($domain);
