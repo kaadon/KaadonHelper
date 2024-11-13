@@ -7,7 +7,8 @@
  */
 
 //PHP ARRAY 相关
-use Kaadon\Helper\Http;
+use Kaadon\Helper\GdImageHelper;
+use Kaadon\Helper\FFMpegVideoHelper;
 
 if (!function_exists('array_rand_value')) {
     /**
@@ -362,5 +363,46 @@ if (!function_exists("http_delete")) {
     }
 }
 
+if (!function_exists("videoTo")) {
+    /**
+     * @param string $videoPath
+     * @param string $thumbnailPath
+     * @param string $format
+     * @return string
+     * @throws \Kaadon\Helper\HelperException
+     */
+    function videoTo(string $videoPath, string $thumbnailPath, string $format = 'mp4'): string
+    {
+        return (new FFMpegVideoHelper($videoPath))->convertTo($thumbnailPath,$format);
+    }
+
+}
+if (!function_exists("videoToThumbnail")) {
+    /**
+     * @param $videoPath
+     * @param $thumbnailPath
+     * @return string
+     * @throws \Kaadon\Helper\HelperException
+     */
+    function videoToThumbnail($videoPath, $thumbnailPath): string
+    {
+        return (new FFMpegVideoHelper($videoPath))->toThumbnail($thumbnailPath);
+    }
+}
+
+
+
+if (!function_exists("imageTo")) {
+    /**
+     * @param $imagePath
+     * @param $webpPath
+     * @return string
+     * @throws \Kaadon\Helper\HelperException
+     */
+    function imageTo($imagePath, $webpPath): string
+    {
+        return (new GdImageHelper($imagePath))->convertTo($webpPath, 'webp');
+    }
+}
 
 
