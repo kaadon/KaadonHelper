@@ -40,12 +40,14 @@ class GdImageHelper
 
     /**
      * @param string $imagePath
+     * @param string|null $extension
      * @throws \Kaadon\Helper\HelperException
      */
-    public function __construct(string $imagePath)
+    public function __construct(string $imagePath,string $extension = null)
     {
         // 根据 $imagePath 的后缀名来判断图片类型
-        $ext = strtolower(pathinfo($imagePath, PATHINFO_EXTENSION));
+        $ext = $extension??strtolower(pathinfo($imagePath, PATHINFO_EXTENSION));
+        if (empty($ext)) throw new HelperException('unrecognized image type');
         $this->image = match ($ext) {
             'png' => imagecreatefrompng($imagePath),
             'gif' => imagecreatefromgif($imagePath),
