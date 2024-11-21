@@ -25,6 +25,14 @@ use GdImage;
  */
 class GdImageHelper
 {
+    public static array $extensions = [
+        'png','gif','jpeg','jpg','bmp','webp','xbm','xpm'
+    ];
+
+    public static function isSupportSuffix($suffix): bool
+    {
+        return in_array($suffix,self::$extensions);
+    }
     /**
      * @var \GdImage|false|resource
      */
@@ -60,22 +68,6 @@ class GdImageHelper
         $content = ob_get_clean();
         return bcdiv((string) strlen($content), "1024", 4);
     }
-    //获取长宽和分辨率
-
-    /**
-     * @return array
-     */
-    public function getInfo(): array
-    {
-        return [
-            'width' => imagesx($this->image),
-            'height' => imagesy($this->image),
-            'dpi' => (int) imageresolution($this->image),
-            'size' => $this->getFileSize(),
-        ];
-    }
-    //变更尺寸
-
     /**
      * @param int $width
      * @param int $height

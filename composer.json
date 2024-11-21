@@ -15,7 +15,8 @@
     "ext-bcmath": "*",
     "ext-mbstring": "*",
     "ext-yaconf": "*",
-    "ext-curl": "*"
+    "ext-curl": "*",
+    "ext-gd": "*"
   },
   "authors": [
     {
