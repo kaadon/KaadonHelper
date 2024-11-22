@@ -82,7 +82,7 @@ if (!function_exists('line_array')) {
         if ($reverse) {
             $strArray = array_reverse($strArray);
         }
-        return $strArray;
+        return array_values($strArray);
     }
 }
 /* YACONF */
