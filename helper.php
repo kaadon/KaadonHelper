@@ -85,6 +85,40 @@ if (!function_exists('line_array')) {
         return array_values($strArray);
     }
 }
+if (!function_exists('stdClassIsEmpty')){
+    /**
+     * 判断对象是否为空
+     * @param stdClass $object
+     * @return bool
+     */
+    function stdClassIsEmpty(stdClass $object): bool {
+        return empty((array) $object);
+    }
+}
+
+if (!function_exists('arrayIteratorIsEmpty')){
+    /**
+     * 判断数组是否为空
+     * @param ArrayIterator $iterator
+     * @return bool
+     */
+    function arrayIteratorIsEmpty(ArrayIterator $iterator): bool {
+        return empty(iterator_to_array($iterator));
+    }
+}
+
+if (!function_exists('splObjectStorageIsEmpty')){
+    /**
+     * 判断对象是否为空
+     * @param SplObjectStorage $storage
+     * @return bool
+     */
+    function splObjectStorageIsEmpty(SplObjectStorage $storage): bool {
+        return $storage->count() === 0;
+    }
+}
+
+
 /* YACONF */
 if (!function_exists('get_yaconf_config')) {
     /**
@@ -98,6 +132,7 @@ if (!function_exists('get_yaconf_config')) {
     {
         $path = "{$fileName}.{$group}";
         if (!is_null($name)) $path .= ".{$name}";
+        /** @noinspection PhpUndefinedClassInspection */
         return \Yaconf::get($path);
     }
 }
@@ -180,16 +215,12 @@ if (!function_exists("bcMath")) {
         switch ($type) {
             case '-':
                 return bcsub($first, $second, $pointNum);
-                break;
             case '+':
                 return bcadd($first, $second, $pointNum);
-                break;
             case '/':
                 return bcdiv($first, $second, $pointNum);
-                break;
             case '*':
                 return bcmul($first, $second, $pointNum);
-                break;
             default :
                 return null;
         }
@@ -207,7 +238,7 @@ if (!function_exists("isBTCAddress")) {
     function isBTCAddress($value): bool
     {
         // BTC地址合法校验33/34
-        if (!(preg_match('/^(1|3|2)[a-zA-Z\d]{24,36}$/', $value) && preg_match('/^[^0OlI]{25,36}$/', $value))) {
+        if (!(preg_match('/^([132])[a-zA-Z\d]{24,36}$/', $value) && preg_match('/^[^0OlI]{25,36}$/', $value))) {
             return false; //满足if代表地址不合法
         }
         return true;
