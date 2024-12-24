@@ -17,7 +17,6 @@
 
 namespace Kaadon\Helper;
 
-use GdImage;
 
 /**
  * Title
@@ -25,44 +24,39 @@ use GdImage;
  */
 class GdImageHelper
 {
-
     /**
      * @var array|string[]
      */
-    public static array $extensions = [
-        'png','gif','jpeg','jpg','bmp','webp','xbm'
+    public static $extensions = [
+        'png', 'gif', 'jpeg', 'jpg', 'bmp', 'webp', 'xbm'
     ];
+
     /**
-     * @var \GdImage|false|resource
+     * @var resource|false
      */
-    protected GdImage|false $image;
+    protected $image;
 
     /**
      * @param string $imagePath
      * @param string|null $extension
-     * @throws \Kaadon\Helper\HelperException
+     * @throws \Exception
      */
-    public function __construct(string $imagePath,string $extension = null)
+    public function __construct(string $imagePath, string $extension = null)
     {
         // 根据 $imagePath 的后缀名来判断图片类型
-        $ext = $extension??strtolower(pathinfo($imagePath, PATHINFO_EXTENSION));
-        if (empty($ext)) throw new HelperException('unrecognized image type');
+        $ext = $extension ?? strtolower(pathinfo($imagePath, PATHINFO_EXTENSION));
+        if (empty($ext)) {
+            throw new HelperException('unrecognized image type');
+        }
         $this->image = $this->createImageFromPath($imagePath);
         if ($this->image === false) {
-            $this->write_log('Unsupported image type: ' . $ext);
             throw new HelperException('Unsupported image type: ' . $ext);
         }
-    }
-    private function write_log($msg): void
-    {
-        $log_file = 'log.txt';
-        $msg = date('Y-m-d H:i:s') . ':' . $msg . PHP_EOL;
-        file_put_contents($log_file, $msg, FILE_APPEND);
     }
 
     /**
      * @param string $imagePath
-     * @return false|\GdImage|resource
+     * @return resource|false
      */
     private function createImageFromPath(string $imagePath)
     {
@@ -70,32 +64,39 @@ class GdImageHelper
         if (!$imageInfo) {
             return false;
         }
-        return match ($imageInfo[2]) {
-            IMAGETYPE_GIF => imagecreatefromgif($imagePath),
-            IMAGETYPE_JPEG => imagecreatefromjpeg($imagePath),
-            IMAGETYPE_PNG => imagecreatefrompng($imagePath),
-            IMAGETYPE_BMP => imagecreatefrombmp($imagePath),
-            IMAGETYPE_WEBP => imagecreatefromwebp($imagePath),
-            IMAGETYPE_XBM => imagecreatefromxbm($imagePath),
-            default => false,
-        };
+        switch ($imageInfo[2]) {
+            case IMAGETYPE_GIF:
+                return imagecreatefromgif($imagePath);
+            case IMAGETYPE_JPEG:
+                return imagecreatefromjpeg($imagePath);
+            case IMAGETYPE_PNG:
+                return imagecreatefrompng($imagePath);
+            case IMAGETYPE_BMP:
+                return imagecreatefrombmp($imagePath);
+            case IMAGETYPE_WEBP:
+                return imagecreatefromwebp($imagePath);
+            case IMAGETYPE_XBM:
+                return imagecreatefromxbm($imagePath);
+            default:
+                return false;
+        }
     }
+
     /**
-     * @param $suffix
+     * @param string $suffix
      * @return bool
-     * @noinspection PhpUnused
      */
     public static function isSupportSuffix($suffix): bool
     {
-        return in_array($suffix,self::$extensions);
+        return in_array($suffix, self::$extensions);
     }
+
     /**
      * @param int $width
      * @param int $height
      * @return $this
-     * @noinspection PhpUnused
      */
-    public function resize(int $width, int $height): self
+    public function resize(int $width, int $height)
     {
         $newImage = imagecreatetruecolor($width, $height);
         imagecopyresampled($newImage, $this->image, 0, 0, 0, 0, $width, $height, imagesx($this->image), imagesy($this->image));
@@ -108,7 +109,7 @@ class GdImageHelper
      * @param string $targetPath
      * @param string $format
      * @return string
-     * @throws \Kaadon\Helper\HelperException
+     * @throws \Exception
      */
     public function convertTo(string $targetPath, string $format): string
     {
@@ -138,5 +139,4 @@ class GdImageHelper
         imagedestroy($this->image);
         return $targetPath;
     }
-
 }

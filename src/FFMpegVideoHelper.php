@@ -1,20 +1,4 @@
 <?php
-/**
- *   +----------------------------------------------------------------------
- *   | PROJECT:   [ KaadonHelper ]
- *   +----------------------------------------------------------------------
- *   | 官方网站:   [ https://developer.kaadon.com ]
- *   +----------------------------------------------------------------------
- *   | Author:    [ kaadon.com <kaadon.com@gmail.com>]
- *   +----------------------------------------------------------------------
- *   | Tool:      [ PhpStorm ]
- *   +----------------------------------------------------------------------
- *   | Date:      [ 2024/11/13 ]
- *   +----------------------------------------------------------------------
- *   | 版权所有    [ 2020~2024 kaadon.com ]
- *   +----------------------------------------------------------------------
- **/
-
 namespace Kaadon\Helper;
 
 use Exception;
@@ -36,9 +20,9 @@ use FFMpeg\Media\Video;
 class FFMpegVideoHelper
 {
     /**
-     * @var \FFMpeg\Media\Video|\FFMpeg\Media\Audio
+     * @var Video|Audio
      */
-    protected Video|Audio $video;
+    protected $video;
 
     /**
      * @param string $videoPath
@@ -48,22 +32,22 @@ class FFMpegVideoHelper
     {
         $ffmpeg = FFMpeg::create();
         $this->video = $ffmpeg->open($videoPath);
-        //判断是视频文件
+        // 判断是视频文件
         if (!$this->video->getStreams()->videos()->first()) {
             throw new HelperException('不是视频文件');
         }
     }
 
     /**
-     * @param $width
-     * @param $height
+     * @param int $width
+     * @param int $height
      * @return $this
      * @throws \Kaadon\Helper\HelperException
      */
-    public function synchronize($width, $height): static
+    public function synchronize(int $width, int $height): FFMpegVideoHelper
     {
         try {
-            //逻辑代码
+            // 逻辑代码
             $dimension = new Dimension($width, $height);
             $this->video->filters()
                 ->resize($dimension)
@@ -80,20 +64,31 @@ class FFMpegVideoHelper
      * @return string
      * @throws \Kaadon\Helper\HelperException
      */
-    public function convertTo(string $path, string $format = 'mp4'): string
+    public function convertTo($path, $format = 'mp4')
     {
-        $path = preg_replace('/\.'.$format.'$/', '', $path);
+        $path = preg_replace('/\.' . $format . '$/', '', $path);
         try {
-            //逻辑代码
-            $filename =  "$path.$format";
-            match ($format) {
-                'mp4' => $this->video->save(new X264(), $filename),
-                'webm' => $this->video->save(new WebM(), $filename),
-                'ogg' => $this->video->save(new Ogg(), $filename),
-                'wmv' => $this->video->save(new WMV(), $filename),
-                'wmv3' => $this->video->save(new WMV3(), $filename),
-                default => throw new HelperException('Unsupported target format: ' . $format),
-            };
+            // 逻辑代码
+            $filename = "$path.$format";
+            switch ($format) {
+                case 'mp4':
+                    $this->video->save(new X264(), $filename);
+                    break;
+                case 'webm':
+                    $this->video->save(new WebM(), $filename);
+                    break;
+                case 'ogg':
+                    $this->video->save(new Ogg(), $filename);
+                    break;
+                case 'wmv':
+                    $this->video->save(new WMV(), $filename);
+                    break;
+                case 'wmv3':
+                    $this->video->save(new WMV3(), $filename);
+                    break;
+                default:
+                    throw new HelperException('Unsupported target format: ' . $format);
+            }
         } catch (Exception $exception) {
             throw new HelperException($exception->getMessage());
         }
@@ -105,10 +100,10 @@ class FFMpegVideoHelper
      * @return string
      * @throws \Kaadon\Helper\HelperException
      */
-    public function toThumbnail(string $thumbnailPath): string
+    public function toThumbnail($thumbnailPath): string
     {
         try {
-            //逻辑代码
+            // 逻辑代码
             $frame = $this->video->frame(TimeCode::fromSeconds(1));
             $frame->save($thumbnailPath);
         } catch (Exception $exception) {
@@ -116,8 +111,4 @@ class FFMpegVideoHelper
         }
         return $thumbnailPath;
     }
-
-
-
-
 }
