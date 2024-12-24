@@ -17,6 +17,7 @@
 
 namespace Kaadon\Helper;
 
+use Exception;
 use FFMpeg\Coordinate\Dimension;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
@@ -67,8 +68,8 @@ class FFMpegVideoHelper
             $this->video->filters()
                 ->resize($dimension)
                 ->synchronize();
-        } catch (\Exception $exception) {
-            throw new HelperException($exception->getMessage());;
+        } catch (Exception $exception) {
+            throw new HelperException($exception->getMessage());
         }
         return $this;
     }
@@ -84,7 +85,7 @@ class FFMpegVideoHelper
         $path = preg_replace('/\.'.$format.'$/', '', $path);
         try {
             //逻辑代码
-            $filename =  "{$path}.{$format}";
+            $filename =  "$path.$format";
             match ($format) {
                 'mp4' => $this->video->save(new X264(), $filename),
                 'webm' => $this->video->save(new WebM(), $filename),
@@ -93,7 +94,7 @@ class FFMpegVideoHelper
                 'wmv3' => $this->video->save(new WMV3(), $filename),
                 default => throw new HelperException('Unsupported target format: ' . $format),
             };
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new HelperException($exception->getMessage());
         }
         return $path;
@@ -110,7 +111,7 @@ class FFMpegVideoHelper
             //逻辑代码
             $frame = $this->video->frame(TimeCode::fromSeconds(1));
             $frame->save($thumbnailPath);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new HelperException($exception->getMessage());
         }
         return $thumbnailPath;

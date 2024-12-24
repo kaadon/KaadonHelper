@@ -25,14 +25,13 @@ use GdImage;
  */
 class GdImageHelper
 {
-    public static array $extensions = [
-        'png','gif','jpeg','jpg','bmp','webp','xbm','xpm'
-    ];
 
-    public static function isSupportSuffix($suffix): bool
-    {
-        return in_array($suffix,self::$extensions);
-    }
+    /**
+     * @var array|string[]
+     */
+    public static array $extensions = [
+        'png','gif','jpeg','jpg','bmp','webp','xbm'
+    ];
     /**
      * @var \GdImage|false|resource
      */
@@ -48,32 +47,53 @@ class GdImageHelper
         // 根据 $imagePath 的后缀名来判断图片类型
         $ext = $extension??strtolower(pathinfo($imagePath, PATHINFO_EXTENSION));
         if (empty($ext)) throw new HelperException('unrecognized image type');
-        $this->image = match ($ext) {
-            'png' => imagecreatefrompng($imagePath),
-            'gif' => imagecreatefromgif($imagePath),
-            'jpeg', 'jpg' => imagecreatefromjpeg($imagePath),
-            'bmp' => imagecreatefrombmp($imagePath),
-            'webp' => imagecreatefromwebp($imagePath),
-            'xbm' => imagecreatefromxbm($imagePath),
-            'xpm' => imagecreatefromxpm($imagePath),
-            default => throw new HelperException('Unsupported image type: ' . $ext),
-        };
+        $this->image = $this->createImageFromPath($imagePath);
+        if ($this->image === false) {
+            $this->write_log('Unsupported image type: ' . $ext);
+            throw new HelperException('Unsupported image type: ' . $ext);
+        }
+    }
+    private function write_log($msg): void
+    {
+        $log_file = 'log.txt';
+        $msg = date('Y-m-d H:i:s') . ':' . $msg . PHP_EOL;
+        file_put_contents($log_file, $msg, FILE_APPEND);
     }
 
     /**
-     * @return int
+     * @param string $imagePath
+     * @return false|\GdImage|resource
      */
-    private function getFileSize(): int
+    private function createImageFromPath(string $imagePath)
     {
-        ob_start();
-        imagejpeg($this->image);
-        $content = ob_get_clean();
-        return bcdiv((string) strlen($content), "1024", 4);
+        $imageInfo = getimagesize($imagePath);
+        if (!$imageInfo) {
+            return false;
+        }
+        return match ($imageInfo[2]) {
+            IMAGETYPE_GIF => imagecreatefromgif($imagePath),
+            IMAGETYPE_JPEG => imagecreatefromjpeg($imagePath),
+            IMAGETYPE_PNG => imagecreatefrompng($imagePath),
+            IMAGETYPE_BMP => imagecreatefrombmp($imagePath),
+            IMAGETYPE_WEBP => imagecreatefromwebp($imagePath),
+            IMAGETYPE_XBM => imagecreatefromxbm($imagePath),
+            default => false,
+        };
+    }
+    /**
+     * @param $suffix
+     * @return bool
+     * @noinspection PhpUnused
+     */
+    public static function isSupportSuffix($suffix): bool
+    {
+        return in_array($suffix,self::$extensions);
     }
     /**
      * @param int $width
      * @param int $height
      * @return $this
+     * @noinspection PhpUnused
      */
     public function resize(int $width, int $height): self
     {
@@ -92,6 +112,9 @@ class GdImageHelper
      */
     public function convertTo(string $targetPath, string $format): string
     {
+        if (!imageistruecolor($this->image)) {
+            imagepalettetotruecolor($this->image);
+        }
         switch (strtolower($format)) {
             case 'png':
                 imagepng($this->image, $targetPath);

@@ -17,7 +17,9 @@
 
 namespace Kaadon\Helper;
 
-class HelperException extends \Exception
+use Exception;
+
+class HelperException extends Exception
 {
 
 }

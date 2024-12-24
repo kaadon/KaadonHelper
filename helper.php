@@ -7,8 +7,8 @@
  */
 
 //PHP ARRAY 相关
-use Kaadon\Helper\GdImageHelper;
-use Kaadon\Helper\FFMpegVideoHelper;
+use Kaadon\Test\GdImageHelper;
+use Kaadon\Test\FFMpegVideoHelper;
 
 if (!function_exists('array_rand_value')) {
     /**
@@ -400,7 +400,7 @@ if (!function_exists("videoTo")) {
      * @param string $thumbnailPath
      * @param string $format
      * @return string
-     * @throws \Kaadon\Helper\HelperException
+     * @throws \Kaadon\Test\HelperException
      */
     function videoTo(string $videoPath, string $thumbnailPath, string $format = 'mp4'): string
     {
@@ -413,7 +413,7 @@ if (!function_exists("videoToThumbnail")) {
      * @param $videoPath
      * @param $thumbnailPath
      * @return string
-     * @throws \Kaadon\Helper\HelperException
+     * @throws \Kaadon\Test\HelperException
      */
     function videoToThumbnail($videoPath, $thumbnailPath): string
     {
@@ -428,7 +428,7 @@ if (!function_exists("imageTo")) {
      * @param $imagePath
      * @param $webpPath
      * @return string
-     * @throws \Kaadon\Helper\HelperException
+     * @throws \Kaadon\Test\HelperException
      */
     function imageTo($imagePath, $webpPath): string
     {

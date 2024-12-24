@@ -18,6 +18,9 @@
     "ext-curl": "*",
     "ext-gd": "*"
   },
+  "require-dev": {
+    "phpunit/phpunit": "^10.5"
+  },
   "authors": [
     {
       "name": "kaadon",
@@ -27,7 +30,8 @@
   ],
   "autoload": {
     "psr-4": {
-      "Kaadon\\Helper\\": "src"
+      "Kaadon\\Helper\\": "src",
+      "Kaadon\\Test\\": "test"
     },
     "files": [
       "helper.php"
