@@ -10,7 +10,7 @@
   "homepage": "http://developer.kaadon.com/",
   "license": "Apache-2.0",
   "require": {
-    "PHP": ">=8.1",
+    "PHP": "^7.3 || ^8.0.0",
     "php-ffmpeg/php-ffmpeg": "^1.3",
     "ext-bcmath": "*",
     "ext-mbstring": "*",
