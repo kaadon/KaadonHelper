@@ -85,154 +85,153 @@ class Http
     /**  目标请求
      * @var string
      * */
-    public string $target;
+    public  $target;
 
     /**
      * 目标 URL 的 host
      * @var string
      * */
-    public string $host;
+    public  $host;
 
     /**
      * 请求目标的端口
      * @var integer */
-    public int $port;
+    public  $port;
 
     /**
      * 请求目标的 path
      * @var string
      * */
-    public string $path;
+    public  $path;
 
     /** 请求目标的 schema
      * @var string
      * */
-    public string $schema;
+    public  $schema;
 
     /**
      * 请求的 method (GET 或者 POST)
      * @var string
      * */
-    public string $method;
+    public  $method;
 
     /**
      * 请求的数据
      * @var array
      * */
-    public array $params;
+    public  $params;
 
     /**
      * 请求时候的 cookie 数据
      * @var array
      * */
-    public array $cookies;
+    public  $cookies;
 
     /**
      * 请求返回的 cookie 数据
      * @var array
      * */
-    public array $_cookies;
+    public  $_cookies;
 
     /**
      * 请求超时时间, 默认是 25
      * @var integer
      * */
-    public int $timeout;
+    public  $timeout;
 
     /**
      * 是否使用 cURL , 默认为 true
      * @var boolean */
-    public bool $useCurl;
+    public  $useCurl;
 
     /**
      * referrer 信息
      * @var string
      * */
-    public string $referrer;
+    public  $referrer;
 
     /**
      * 请求客户端 User agent
      * @var string
      * */
-    public string $userAgent;
+    public  $userAgent;
 
     /**
      * Contains the cookie path (to be used with cURL)
      * @var string
      * */
-    public string $cookiePath;
+    public  $cookiePath;
 
     /**
      * 是否使用 Cookie
      * @var boolean
      * */
-    public bool $useCookie;
+    public  $useCookie;
 
     /**
      * 是否为下一次请求保存 Cookie
      * @var boolean
      * */
-    public bool $saveCookie;
+    public  $saveCookie;
 
     /**
      * HTTP Basic Auth 用户名 (for authentication)
      * @var string
      * */
-    public string $username;
+    public  $username;
 
     /**
      * HTTP Basic Auth 密码 (for authentication)
      * @var string
      * */
-    public string $password;
+    public  $password;
 
     /**
      * 请求的结果集
      * @var string
      * */
-    public string $result;
+    public  $result;
 
     /**
      * 最后一个请求的 headers 信息
      * @var array
      * */
-    public array $headers;
+    public  $headers;
 
     /**
      * Contains the last call's http status code
      * @var string
      * */
-    public string $status;
+    public  $status;
 
     /** 是否跟随 http redirect 跳转
      * @var boolean */
-    public bool $redirect;
+    public  $redirect;
 
     /** 最大 http redirect 调整数
      * @var integer */
-    public int $maxRedirect;
+    public  $maxRedirect;
 
     /** 当前请求有多少个 URL
      * @var integer */
-    public int $curRedirect;
+    public  $curRedirect;
 
     /** 错误代码
      * @var string */
-    public string $error;
+    public  $error;
 
     /** Store the next token
      * @var string */
-    public string $nextToken;
+    public  $nextToken;
 
     /** 是否存储 bug 信息
      * @var boolean */
-    public bool $debug;
+    public  $debug;
 
     /** Stores the debug messages
      * @var array
-     * @todo will keep debug messages
      * */
-    public array $debugMsg;
+    public  $debugMsg;
 
     /**  Constructor for initializing the class with default values.
      * @return void */
@@ -289,32 +288,27 @@ class Http
      * with different data.
      * @return void
      */
-    public function clear(): void
+    public function clear()
     {
-        // Set the request defaults
         $this->host = '';
         $this->port = 0;
         $this->path = '';
         $this->target = '';
         $this->method = 'GET';
         $this->schema = 'http';
-        $this->params = array();
-        $this->headers = array();
-        $this->cookies = array();
-        $this->_cookies = array();
-
-        // Set the config details
+        $this->params = [];
+        $this->headers = [];
+        $this->cookies = [];
+        $this->_cookies = [];
         $this->debug = false;
         $this->error = '';
         $this->status = 0;
-        $this->timeout = '25';
+        $this->timeout = 25;
         $this->useCurl = true;
         $this->referrer = '';
         $this->username = '';
         $this->password = '';
         $this->redirect = true;
-
-        // Set the cookie and agent defaults
         $this->nextToken = '';
         $this->useCookie = false;
         $this->saveCookie = false;
@@ -503,7 +497,7 @@ class Http
     /**
      * 执行一条 http get 请求
      */
-    public function get($url, $data = array()): bool|string
+    public function get($url, $data = array())
     {
         return $this->execute($url, '', 'get', $data);
     }
@@ -514,7 +508,7 @@ class Http
      * @param array $data
      * @return bool|string
      */
-    public function post(string $url, array $data = []): bool|string
+    public function post(string $url, array $data = [])
     {
         return $this->execute($url, '', 'post', $data);
     }
@@ -522,7 +516,7 @@ class Http
     /**
      * 执行一条 http upload 请求
      */
-    public function upload($url, $data = array()): bool|string
+    public function upload($url, $data = array())
     {
         return $this->execute($url, '', 'upload', $data);
     }
@@ -532,7 +526,7 @@ class Http
      * @param string $request_file_url 远程的文件 url
      * @param string $save_to_filepath 本地存储的文件 路径
      */
-    public function save(string $request_file_url, string $save_to_filepath): bool|string
+    public function save(string $request_file_url, string $save_to_filepath)
     {
         $fp = fopen($save_to_filepath, 'wb');
         return $this->execute($request_file_url, '', 'get', array(), $extra_params = array('CURLOPT_FILE' => $fp));
@@ -547,7 +541,7 @@ class Http
      * @param array $extra_params
      * @return bool|string 请求的结果集
      */
-    public function execute(string $target = '', string $referrer = '', string $method = '', array $data = [], array $extra_params = []): bool|string
+    public function execute(string $target = '', string $referrer = '', string $method = '', array $data = [], array $extra_params = [])
     {
         // Populate the properties
         $this->target =  $target ?: $this->target;
@@ -927,18 +921,21 @@ class Http
     }
 
     /** 设置 cookie , 为下一次请求做准备 */
-    private function _setCookie($name, $value, $expires = "", $path = "/", $domain = "", $secure = 0)
+    private function _setCookie($name, $value, $expires = "", $path = "/", $domain = "", $secure = 0): void
     {
         if (strlen($name) == 0) {
-            return ($this->_setError("No valid cookie name was specified."));
+            ($this->_setError("No valid cookie name was specified."));
+            return;
         }
 
         if (strlen($path) == 0 || strcmp($path[0], "/")) {
-            return ($this->_setError("$path is not a valid path for setting cookie $name."));
+            ($this->_setError("$path is not a valid path for setting cookie $name."));
+            return;
         }
 
         if ($domain == "" || !strpos($domain, ".", $domain[0] == "." ? 1 : 0)) {
-            return ($this->_setError("$domain is not a valid domain for setting cookie $name."));
+            ($this->_setError("$domain is not a valid domain for setting cookie $name."));
+            return;
         }
 
         $domain = strtolower($domain);
@@ -959,12 +956,13 @@ class Http
             "expires" => $expires,
             "secure" => $secure
         );
+
     }
 
     /**
      * cookie  数据集编码
      */
-    private function _encodeCookie($value, $name): array|string
+    private function _encodeCookie($value, $name)
     {
         return ($name ? str_replace("=", "%25", $value) : str_replace(";", "%3B", $value));
     }
@@ -999,16 +997,16 @@ class Http
     /**
      * 匹配域名
      */
-    private function _domainMatch($requestHost, $cookieDomain): bool
-    {
-        if ('.' != $cookieDomain[0]) {
-            return $requestHost == $cookieDomain;
-        } elseif (substr_count($cookieDomain, '.') < 2) {
-            return false;
-        } else {
-            return str_ends_with('.' . $requestHost, $cookieDomain);
-        }
+private function _domainMatch($requestHost, $cookieDomain)
+{
+    if ('.' != $cookieDomain[0]) {
+        return $requestHost == $cookieDomain;
+    } elseif (substr_count($cookieDomain, '.') < 2) {
+        return false;
+    } else {
+        return substr('.' . $requestHost, -strlen($cookieDomain)) === $cookieDomain;
     }
+}
 
     /**
      * 给当前操作做记号用的
