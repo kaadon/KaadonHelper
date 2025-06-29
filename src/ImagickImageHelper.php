@@ -56,11 +56,6 @@ class ImagickImageHelper
         try {
             $this->image->setImageFormat($format);
             if ($quality) $this->image->setImageCompressionQuality($quality);
-            //判断 $targetPath 格式是否为 $format
-            $pathInfo = pathinfo($targetPath);
-            if (strtolower($pathInfo['extension']) !== strtolower($format)) {
-                $targetPath = $pathInfo['dirname'] . '/' . $pathInfo['filename'] . '_imagick.' . $format;
-            }
             $this->image->writeImage($targetPath);
         } catch (ImagickException $e) {
             throw new HelperException('Failed to convert image: ' . $e->getMessage());
